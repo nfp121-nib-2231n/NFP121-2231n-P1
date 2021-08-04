@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=BrowseButton
+comment1.params=
+comment1.target=javax.swing.JButton\ get()
+comment2.params=s\ label\ f
+comment2.target=BrowseButton(java.lang.String,\ javax.swing.JLabel,\ javax.swing.JFileChooser)
+comment3.params=e
+comment3.target=void\ actionPerformed(java.awt.event.ActionEvent)
+numComments=4
