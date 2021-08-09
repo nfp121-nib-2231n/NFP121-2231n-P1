@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Fetcher
+comment1.params=bb\ table
+comment1.target=Fetcher(BrowseButton,\ Table)
+comment2.params=tData\ fData
+comment2.target=void\ Compare(java.util.ArrayList,\ java.util.LinkedHashMap)
+comment3.params=inputSearch\ file\ rech\ filename
+comment3.target=java.lang.String[]\ FindString(java.lang.String,\ java.lang.String,\ boolean,\ java.lang.String)
+comment4.params=ae
+comment4.target=void\ actionPerformed(java.awt.event.ActionEvent)
+numComments=5

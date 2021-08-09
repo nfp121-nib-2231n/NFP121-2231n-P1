@@ -2,6 +2,8 @@
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
+import java.util.*;
+import java.io.IOException;
 
 public class BrowseButton implements ActionListener
 {
@@ -21,11 +23,46 @@ public class BrowseButton implements ActionListener
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
     }
+    public void getFiles(File f,String parent,LinkedHashMap<String,String> data) throws IOException{
+        // Get all files from a directory.
+        File[] listOfFiles = f.listFiles();
+        if(listOfFiles != null)
+        {
+            for (File file : listOfFiles) 
+            {
+                if(file.isHidden()==false)
+                {
+                    if (file.isFile()) 
+                    {
+                        String name=parent+file.getName();
+                        data.put(name,readFile(file));
+                    } else if (file.isDirectory()) 
+                    {
+                        String p=parent+file.getName()+" > ";
+                        getFiles(file,p,data);
+                    }
+                }
+            }
+        }
+    }
+    public File getFile()
+    {
+        return fc.getSelectedFile();
+    }
+    private String readFile(File f) throws IOException {
+    String filedata="";
+    try (Scanner scanner =  new Scanner(f)){
+      while (scanner.hasNextLine()){
+        filedata+=scanner.nextLine();
+        filedata+="\n";
+      }      
+    }
+    return filedata;
+  }
     
     public void actionPerformed(ActionEvent e)
     {
         int r = fc.showOpenDialog(null);
-
         if (r == JFileChooser.APPROVE_OPTION)
         {
             l.setText("Selected Directory : "+fc.getSelectedFile().getAbsolutePath());

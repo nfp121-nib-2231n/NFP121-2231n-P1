@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Result
+comment1.params=data
+comment1.target=Result(java.util.LinkedHashMap)
+comment2.params=p\ c\ d
+comment2.target=void\ addPanels(javax.swing.JPanel,\ java.awt.GridBagConstraints,\ java.util.LinkedHashMap)
+numComments=3

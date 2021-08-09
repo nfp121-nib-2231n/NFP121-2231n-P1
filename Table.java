@@ -35,6 +35,10 @@ public class Table implements ActionListener
     {
         return model;
     }
+    public int rowCount()
+    {
+        return tab.getRowCount();
+    }
     private void SetHeader()
     {
         String[] header={"","Desciption","List de séquences","Joker","Opérateur","Recherche Multiple","Type de Fichiers"}; 
@@ -47,7 +51,7 @@ public class Table implements ActionListener
     }
     public void insertEmpty()
     {
-        model.addRow(new String[]{Integer.toString(count)," "," "," "," "," ",""});
+        model.addRow(new String[]{Integer.toString(count),"","","","","",""});
         tab.setRowHeight(count-1,60);
         count++;
     }
@@ -78,16 +82,6 @@ public class Table implements ActionListener
             }
             list.add(current);
         }
-        for(int k=0;k<list.size();k++)
-        {
-            String[] a =list.get(k);
-            for(int s=0;s<a.length;s++)
-            {
-                System.out.println("col"+s+" : "+a[s]);
-            }
-            
-        }
-        System.out.println("SIZE : "+list.size());
         return list;
     }
 }

@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
+import java.io.File;
 
 public class UI
 {
@@ -18,6 +20,8 @@ public class UI
     private JPanel FlowPanel;
     private JButton print;
     
+    private Fetcher fetcher;
+    
     public UI()
     {
         f=new JFrame();
@@ -31,17 +35,16 @@ public class UI
         plusRow=new JButton("+");
         minusRow=new JButton("-");
         print=new JButton("Print");
+        
+        fetcher=new Fetcher(b,t);
+        
         plusRow.addActionListener(t);
         minusRow.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent ae) {
             t.remove();
          }
       });
-      print.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent ae) {
-            t.fetchData();
-         }
-      });
+        print.addActionListener(fetcher);
         b.get().addActionListener(b);
         selectLabel=new JLabel("Select Project Directory");
         FlowPanel.setLayout(new FlowLayout());
