@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=TextAreaEditor
+comment1.params=t
+comment1.target=TextAreaEditor(Table)
+comment2.params=e
+comment2.target=void\ keyTyped(java.awt.event.KeyEvent)
+comment3.params=e
+comment3.target=void\ keyPressed(java.awt.event.KeyEvent)
+comment4.params=e
+comment4.target=void\ keyReleased(java.awt.event.KeyEvent)
+comment5.params=value
+comment5.target=void\ setValue(java.lang.Object)
+comment6.params=
+comment6.target=java.lang.Object\ getCellEditorValue()
+numComments=7
