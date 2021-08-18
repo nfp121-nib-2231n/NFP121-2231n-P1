@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.io.*;
 
 public class Result
 { 
@@ -63,11 +64,13 @@ public class Result
                     {
                         String[] linenumber=array[2].split(",");
                         String[] lines=array[3].split("-_-");
+                        //System.out.println(array[3]);
                         String containsJoker=array[5];
  
                         if(containsJoker.equals("false"))
                         {
-                           String wordSearched=array[4];
+                           String[] wordSearched=array[4].split("-_-");
+                           //System.out.println(wordSearched);
                         
                             
                         JPanel[] panels = new JPanel[lines.length];
@@ -119,7 +122,8 @@ public class Result
                                 panels[k].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
                             }
                             //Make the word found bold
-                            String[] split=lines[k].split(wordSearched);
+                            
+                            String[] split=lines[k].split(wordSearched[k]);
                             String htmlStr="<html><span>"+linenumber[k]+"|";
                             for(int y=0;y<split.length;y++)
                             {
@@ -127,16 +131,18 @@ public class Result
                                 {
                                     htmlStr+=split[y]+"</span></html>";
                                 }else{
-                                    htmlStr+=split[y]+"<b><i>"+wordSearched+"</i></b>";
+                                    htmlStr+=split[y]+"<b><i>"+wordSearched[k]+"</i></b>";
                                 }
                             }
+                            
+                            
                             labels[k]=new JLabel(htmlStr);
                             labels[k].setFont(f);
                             panels[k].add(labels[k]);
                             p1.add(panels[k]);
                         }
-                    }else
-                    {
+                        }else //if there is a joker
+                        {
                         String[] wordSearched=array[4].split("-_-");
                         //System.out.println(array[4]);
                         JPanel[] panels = new JPanel[lines.length];
@@ -186,9 +192,10 @@ public class Result
                             {
                                 panels[k].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
                             }
+                            
                             //Make the word found bold
                             String [] wordParts=wordSearched[k].split("-");
-                            String htmlStr="<html><span>"+linenumber[k]+"|";
+                            String htmlStr="";
                             String newWord="";
                             String rest=lines[k];
                             for(int it=0;it<wordParts.length;it++)
@@ -212,8 +219,43 @@ public class Result
                                     }
                                 }
                             }
-                            htmlStr+="</span></html>";
-                            labels[k]=new JLabel(htmlStr);
+                            
+                            //adding missing line numbers and fixing their length
+                            Reader reader=new StringReader(htmlStr);
+                            BufferedReader br=new BufferedReader(reader);
+                            String htmlStr2="<html>";
+                            String line="";
+                            try{
+                                int num=Integer.valueOf(linenumber[k]);
+                                while((line = br.readLine()) != null)
+                                {
+                                    //Parsing to String
+                                    String strnum=num+"";
+                                    //Same function as before
+                                    for(int x=0;x<linenumber[k].length();x++)
+                                    {
+                                        if(strnum.length()<linenumber[k].length())
+                                        {
+                                            String lasts=strnum;
+                                            strnum="";
+                                            for(int h=lasts.length();h<linenumber[k].length();h++)
+                                            {
+                                                strnum+="0";
+                                            }
+                                            strnum+=lasts;  
+                                        }
+                                    }
+                                    htmlStr2+=strnum+"|"+line+"<br/>";
+                                    num++;
+                                }
+                                br.close();
+                            }catch(IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            htmlStr2+="</html>";
+            
+                            labels[k]=new JLabel(htmlStr2);
                             labels[k].setFont(f);
                             panels[k].add(labels[k]);
                             p1.add(panels[k]);
@@ -223,7 +265,7 @@ public class Result
                     
                 }
             }
-            else
+            else //if count=0
             {
                     JPanel emptyPanel=new JPanel();
                     String emptyString="<html><span style=\"font-size:16px;color:rgb(125,125,125)\">No files were found.</span></html>";
@@ -237,5 +279,9 @@ public class Result
             p1.setLayout(new BoxLayout(p1,BoxLayout.Y_AXIS));
             p.add(p1,c);
         }
+    }
+    class c
+    {
+        //text
     }
 }

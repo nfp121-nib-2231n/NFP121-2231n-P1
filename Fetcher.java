@@ -35,16 +35,18 @@ public class Fetcher implements ActionListener
             String oper=tableContent[4];
             String rech=tableContent[5];
             String type=tableContent[6];
-    
+            
+            if(los.equals("")||los==null)
+            {
+                los=desc.toLowerCase();
+            }
+            
             //Make new empty arraylist;
             ArrayList<String[]> a =new ArrayList<String[]>();
             
             boolean multiple=false;
             //Check los
-            if(los.equals("")||los==null)
-            {
-                los=desc.toLowerCase();
-            }
+            
             //Check joker
             String[] losParts=los.split(joker);
             String ptn="";
@@ -124,89 +126,99 @@ public class Fetcher implements ActionListener
     String containsJoker="false";
     
     String wordSearched="";
+    BufferedReader br= new BufferedReader(inputString);
     
-        BufferedReader br = new BufferedReader(inputString);
-        
         try {
-            if(joker.equals(""))
+            String[] splitLos= inputSearch.split(",");
+            for(int i=0;i<splitLos.length;i++)
             {
-                
-                while((line = br.readLine()) != null)
+                inputString.reset();
+                br = new BufferedReader(inputString);
+                if(joker.equals(""))
                 {
-                    countLine++;
-                    String[] words = line.split(" ");
-    
-                    for (String word : words) 
+                    while((line = br.readLine()) != null)
                     {
-                          if (word.contains(inputSearch)) 
-                          {
-                            if(wordSearched=="")
-                            {
-                                wordSearched=inputSearch;
-                            }
-                            count++;
-                            countBuffer++;
-                            if(lines.contains(line))
-                            {
-                            
-                            }else
-                            {
-                            lines+=line+" "+"-_-";
-                            }  
-                          }
-                    }
-    
-                    if(countBuffer > 0)
-                    {
-                        countBuffer = 0;
-                        lineNumber += countLine + ",";
-                    }
-
-                }
-            }
-            else
-            {
-                Pattern p =Pattern.compile(joker,Pattern.DOTALL);  
-                String currentText="";
-                containsJoker="true";
-                while((line=br.readLine())!=null)
-                {
-                    currentText+=line+"\n";
-                    countLine++;
-                    if(losParts!=null)
-                    {
-                        String firstPart=losParts[0];
-                        if(firstPart!="")
+                        countLine++;
+                        String[] words = line.split(" ");
+                        for (String word : words) 
                         {
-                            if(currentText.contains(firstPart))
-                            {
-                                Matcher m=p.matcher(currentText);
-                            
-                                    while(m.find())
+                              
+                                  if (word.contains(splitLos[i])) 
+                                  {
+                                    wordSearched+=splitLos[i]+"-_-";
+                                    count++;
+                                    countBuffer++;
+                                    if(lines.contains(line))
                                     {
-                                        if(lines.contains(currentText))
-                                        {
-                                        }else
-                                        {
-                                            lines+=currentText+" "+"-_-";
-                                        }
-                                        
-                                        lineNumber+=countLine+",";
-                                        count++;
-                                        String word=currentText.substring(m.start(),m.end());
-                                        word=se.EscapeString(word);
-                                        wordSearched+=word+"-";
-                                    }
-                                wordSearched+="-_-";
-                                currentText="";   
-                            }else
+                                    
+                                    }else
+                                    {
+                                    lines+=line+" "+"-_-";
+                                    }  
+                                  
+                        }
+                    }
+        
+                        if(countBuffer > 0)
+                        {
+                            countBuffer = 0;
+                            lineNumber += countLine + ",";
+                        }
+    
+                    }
+                }
+                else
+                {
+                    Pattern p =Pattern.compile(joker,Pattern.DOTALL);  
+                    System.out.println(joker);
+                    String currentText="";
+                    containsJoker="true";
+                    while((line=br.readLine())!=null)
+                    {
+                        currentText+=line+"\n";
+                        countLine++;
+                        if(losParts!=null)
+                        {
+                            String firstPart=losParts[0];
+                            if(firstPart!="")
                             {
-                                currentText="";
+                                if(currentText.contains(firstPart))
+                                {
+                                    Matcher m=p.matcher(currentText);
+                                    //System.out.println(currentText);
+                                    if(m.find()){
+                                        //this will reset the matcher to start again from 0
+                                        m.reset();
+                                        while(m.find())
+                                        {
+                                            if(lines.contains(currentText))
+                                            {
+                                            }else
+                                            {
+                                                lines+=currentText+" "+"-_-";
+                                            }
+                                            lineNumber+=countLine+",";
+                                            count++;
+                                            String word=currentText.substring(m.start(),m.end());
+                                            word=se.EscapeString(word);
+                                            wordSearched+=word+"-";
+                                        }
+                                        wordSearched+="-_-";
+                                        currentText="";  
+                                    }else
+                                    {
+                                    
+                                    }
+                                     
+                                }else
+                                {
+                                    currentText="";
+                                }
                             }
                         }
                     }
-                }
-                /*
+            }
+                /*jkjnkn
                 while((line = br.readLine()) != null)
                 {
                     currentText+=line+"\n";
@@ -230,11 +242,16 @@ public class Fetcher implements ActionListener
                     }
                 }*/
             }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            
         
-        }
+    
+    br.close();
+    } catch (IOException e) 
+    {
+        e.printStackTrace();
+        
+    }
+    
     //System.out.println("count "+count);
     if(count!=0)
     {
