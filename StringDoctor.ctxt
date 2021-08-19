@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=StringDoctor
+comment1.params=s
+comment1.target=java.lang.String\ EscapeString(java.lang.String)
+comment2.params=s
+comment2.target=boolean\ CheckEmpty(java.lang.String)
+numComments=3

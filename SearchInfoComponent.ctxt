@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.target=SearchInfoComponent
+comment1.params=newSearchInfoComponent
+comment1.target=void\ add(SearchInfoComponent)
+comment10.params=
+comment10.target=boolean\ getCJ()
+comment2.params=newSearchInfoComponent
+comment2.target=void\ remove(SearchInfoComponent)
+comment3.params=componentIndex
+comment3.target=SearchInfoComponent\ getComponent(int)
+comment4.params=
+comment4.target=int\ getIndex()
+comment5.params=
+comment5.target=java.lang.String\ getFilename()
+comment6.params=
+comment6.target=int\ getCount()
+comment7.params=
+comment7.target=java.lang.String[]\ getLinenumber()
+comment8.params=
+comment8.target=java.lang.String[]\ getLines()
+comment9.params=
+comment9.target=java.lang.String[]\ getWords()
+numComments=11

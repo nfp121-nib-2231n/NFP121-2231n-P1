@@ -23,8 +23,8 @@ public class BrowseButton implements ActionListener
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
     }
-    public void getFiles(File f,String parent,LinkedHashMap<String,String> data) throws IOException{
-        // Get all files from a directory.
+    public void getFiles(File f,String parent,ArrayList<FileInfo> data) throws IOException{
+        // Get the name and the data of all the files inside a folder.
         File[] listOfFiles = f.listFiles();
         if(listOfFiles != null)
         {
@@ -35,9 +35,10 @@ public class BrowseButton implements ActionListener
                     if (file.isFile()) 
                     {
                         String name=parent+file.getName();
-                        data.put(name,readFile(file));
+                        data.add(new FileInfo(name,readFile(file)));
                     } else if (file.isDirectory()) 
                     {
+                        //Made it recursive to get any subfolder containing files too.
                         String p=parent+file.getName()+" > ";
                         getFiles(file,p,data);
                     }
@@ -49,16 +50,17 @@ public class BrowseButton implements ActionListener
     {
         return fc.getSelectedFile();
     }
-    private String readFile(File f) throws IOException {
-    String filedata="";
-    try (Scanner scanner =  new Scanner(f)){
-      while (scanner.hasNextLine()){
-        filedata+=scanner.nextLine();
-        filedata+="\n";
-      }      
+    private String readFile(File f) throws IOException 
+    {
+        String filedata="";
+        try (Scanner scanner =  new Scanner(f)){
+          while (scanner.hasNextLine()){
+            filedata+=scanner.nextLine();
+            filedata+="\n";
+          }      
+        }
+        return filedata;
     }
-    return filedata;
-  }
     
     public void actionPerformed(ActionEvent e)
     {
@@ -66,11 +68,10 @@ public class BrowseButton implements ActionListener
         if (r == JFileChooser.APPROVE_OPTION)
         {
             l.setText("Selected Directory : "+fc.getSelectedFile().getAbsolutePath());
-    }
-    else
+        }
+        else
         {
             l.setText("No Directories Selected");
         }
-
     }
 }

@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=Info
+comment1.params=elements
+comment1.target=Info(java.util.ArrayList)
+comment2.params=
+comment2.target=java.util.Iterator\ createIterator()
+comment3.params=
+comment3.target=int\ getSize()
+numComments=4

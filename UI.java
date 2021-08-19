@@ -34,7 +34,7 @@ public class UI
         t=new Table();
         plusRow=new JButton("+");
         minusRow=new JButton("-");
-        print=new JButton("Print");
+        print=new JButton("Search");
         
         fetcher=new Fetcher(b,t);
         

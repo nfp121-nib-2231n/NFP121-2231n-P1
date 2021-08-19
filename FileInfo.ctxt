@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=FileInfo
+comment1.params=n\ d
+comment1.target=FileInfo(java.lang.String,\ java.lang.String)
+comment2.params=
+comment2.target=java.lang.String\ getName()
+comment3.params=
+comment3.target=java.lang.String\ getData()
+numComments=4

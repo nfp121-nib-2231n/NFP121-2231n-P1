@@ -1,4 +1,4 @@
-public class StringEscaper
+public class StringDoctor
 {
     public String EscapeString(String s)
     {
@@ -13,5 +13,12 @@ public class StringEscaper
        
         return s;
     }
-    
+    public boolean CheckEmpty(String s)
+    {
+        if(s.equals(""))
+        {
+        return true;
+        }
+        return false;
+    }
 }

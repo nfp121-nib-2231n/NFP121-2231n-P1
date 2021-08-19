@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=SearchInfoGroup
+comment1.params=i
+comment1.target=SearchInfoGroup(int)
+comment2.params=
+comment2.target=int\ getIndex()
+comment3.params=newSearchInfoComponent
+comment3.target=void\ add(SearchInfoComponent)
+comment4.params=newSearchInfoComponent
+comment4.target=void\ remove(SearchInfoComponent)
+comment5.params=componentIndex
+comment5.target=SearchInfoComponent\ getComponent(int)
+comment6.params=
+comment6.target=java.util.Iterator\ createIterator()
+comment7.params=
+comment7.target=int\ getSize()
+numComments=8

@@ -10,130 +10,76 @@ public class Fetcher implements ActionListener
     // with the file data and saves the results in a list;
     private BrowseButton b;
     private Table t;
-    private ArrayList<String[]> tableData;
-    private LinkedHashMap<String,String> fileData;
-    private StringEscaper se;
+    private Info<TableInfo> tableData;
+    private Info<FileInfo> fileData;
+    private StringDoctor se;
     
     public Fetcher(BrowseButton bb,Table table)
     {
         b=bb;
         t=table;
-        se=new StringEscaper();
+        se=new StringDoctor();
     }
      
-    private void Compare(ArrayList<String[]> tData,LinkedHashMap<String,String> fData)
+    private void Compare(Info<TableInfo> tData,Info<FileInfo> fData)
     {
-        LinkedHashMap<Integer,ArrayList<String[]>> data=new LinkedHashMap<Integer,ArrayList<String[]>>();
         int index=0;
-        for(String[] s : tData)
+        Iterator tIter=tData.createIterator();
+        
+        //Top level group that holds everything
+        SearchInfoComponent all = new SearchInfoGroup(index);
+        while(tIter.hasNext())
         {
             index++;
-            String[] tableContent=s;
-            String desc=tableContent[1];
-            String los=tableContent[2];
-            String joker=tableContent[3];
-            String oper=tableContent[4];
-            String rech=tableContent[5];
-            String type=tableContent[6];
-            
-            if(los.equals("")||los==null)
+            //Mid level groups that holds multiple SearchInfos related to a passed index
+            SearchInfoComponent group = new SearchInfoGroup(index);
+            TableInfo currentCell=(TableInfo)tIter.next();
+            Iterator fIter=fData.createIterator();
+            while(fIter.hasNext())
             {
-                los=desc.toLowerCase();
-            }
-            
-            //Make new empty arraylist;
-            ArrayList<String[]> a =new ArrayList<String[]>();
-            
-            boolean multiple=false;
-            //Check los
-            
-            //Check joker
-            String[] losParts=los.split(joker);
-            String ptn="";
-            if(joker.equals("")||joker==null)
-            {
-                
-            }else
-            {
-                if(los.contains(joker))
+                FileInfo currentFile=(FileInfo)fIter.next();
+                if(currentFile.getName().contains(currentCell.getType()))
                 {
-                    String[] parts=los.split(joker);
-                    
-                    if(parts!=null)
-                    {
-                        for(int x=0;x<parts.length;x++)
-                        {
-                            if(x==parts.length-1)
-                            {
-                                ptn+=se.EscapeString(parts[x]);
-                            }else
-                            {
-                                ptn+=se.EscapeString(parts[x])+"[^"+se.EscapeString(parts[parts.length-1])+"]*";
-                            }
-                        }
-                    }
+                    SearchInfo s=FindString(currentCell,currentFile);
+                    if(s!=null)
+                        group.add(s);
                 }
             }
-            joker=ptn;
-
-            //Check oper
-            //Check rech
-            if(rech.toLowerCase().equals("faux"))
-            {
-                multiple=false;
-            }else if(rech.toLowerCase().equals("vrai"))
-            {
-                multiple=true;
-            }
-            //Check type
-            if(type.toLowerCase().equals("code"))
-            {
-                type=".java";
-            }else if(type.toLowerCase().equals("texte"))
-            {
-                type=".txt";
-            }else
-            {
-                type="";
-            }
-            
-            Set<String> keys=fData.keySet();
-            for (String key : keys) 
-            {
-                String str=fData.get(key);
-                if(key.contains(type))
-                {
-                    String[] ar=FindString(los,str,multiple,key,joker,losParts);
-                    if(ar!=null)
-                        a.add(ar);
-                }
-            }
-            data.put(index,a);
+            all.add(group);
         }
-        Result r = new Result(data);
+        Result r = new Result(all);
     }
-    private String[] FindString(String inputSearch,String file,boolean rech,String filename,String joker,String[] losParts)
+    private SearchInfo FindString(TableInfo ti,FileInfo fi)
     {
-    int count = 0,countBuffer=0,countLine=0;
-    String lineNumber = "";
-    Reader inputString = new StringReader(file);
-    
-    String[] result= new String[6];
-    
-    String line = "";
-    String lines="";
-    String linesEnd="";
-    String containsJoker="false";
-    
-    String wordSearched="";
-    BufferedReader br= new BufferedReader(inputString);
+        int count = 0,countBuffer=0,countLine=0;
+        //String to store at what lines the words were found
+        String lineNumber = "";
+        Reader reader = new StringReader(fi.getData());
+        
+        SearchInfo result;
+        //Empty string to store each line in
+        String line = "";
+        //String to store found lines in
+        String lines="";
+        //boolean that checks if the search contains joker
+        boolean containsJoker=false;
+        //String to store the words found in
+        String wordSearched="";
+        
+        String filename=fi.getName();
+        
+        String[] losParts=ti.getLosParts();
+        
+        String joker=ti.getJoker();
+        
+        BufferedReader br= new BufferedReader(reader);
     
         try {
-            String[] splitLos= inputSearch.split(",");
+            String[] splitLos= ti.getLos().split(",");
             for(int i=0;i<splitLos.length;i++)
             {
-                inputString.reset();
-                br = new BufferedReader(inputString);
+                reader.reset();
+                br = new BufferedReader(reader);
                 if(joker.equals(""))
                 {
                     while((line = br.readLine()) != null)
@@ -142,37 +88,32 @@ public class Fetcher implements ActionListener
                         String[] words = line.split(" ");
                         for (String word : words) 
                         {
-                              
-                                  if (word.contains(splitLos[i])) 
-                                  {
-                                    wordSearched+=splitLos[i]+"-_-";
-                                    count++;
-                                    countBuffer++;
-                                    if(lines.contains(line))
-                                    {
+                            if (word.contains(splitLos[i])) 
+                            {
+                                wordSearched+=splitLos[i]+"-_-";
+                                count++;
+                                countBuffer++;
+                                if(lines.contains(line))
+                                {
                                     
-                                    }else
-                                    {
+                                }else
+                                {
                                     lines+=line+" "+"-_-";
-                                    }  
-                                  
+                                }    
+                            }
                         }
-                    }
-        
                         if(countBuffer > 0)
                         {
                             countBuffer = 0;
                             lineNumber += countLine + ",";
                         }
-    
                     }
                 }
                 else
                 {
                     Pattern p =Pattern.compile(joker,Pattern.DOTALL);  
-                    System.out.println(joker);
                     String currentText="";
-                    containsJoker="true";
+                    containsJoker=true;
                     while((line=br.readLine())!=null)
                     {
                         currentText+=line+"\n";
@@ -185,7 +126,6 @@ public class Fetcher implements ActionListener
                                 if(currentText.contains(firstPart))
                                 {
                                     Matcher m=p.matcher(currentText);
-                                    //System.out.println(currentText);
                                     if(m.find()){
                                         //this will reset the matcher to start again from 0
                                         m.reset();
@@ -217,52 +157,17 @@ public class Fetcher implements ActionListener
                             }
                         }
                     }
+                }                 
             }
-                /*jkjnkn
-                while((line = br.readLine()) != null)
-                {
-                    currentText+=line+"\n";
-                    Matcher m=p.matcher(currentText);
-                    countLine++;
-                    while(m.find())
-                    {
-                        lines+=currentText+" "+"-_-";
-                        lineNumber+=m.start();
-                        linesEnd+=countLine+",";
-                        wordSearched=currentText.substring(m.start(),m.end());
-                        currentText="";
-                        count++;
-                        countBuffer++;
-                    }
-                    
-                    if(countBuffer > 0)
-                    {
-                        countBuffer = 0;
-                        //lineNumber += countLine + ",";
-                    }
-                }*/
-            }
-            
-        
-    
     br.close();
     } catch (IOException e) 
     {
         e.printStackTrace();
-        
     }
-    
-    //System.out.println("count "+count);
     if(count!=0)
     {
-        result[0]=filename;
-        result[1]=count+"";
-        result[2]=lineNumber;
-        result[3]=lines;
-        result[4]=wordSearched;
-        result[5]=containsJoker;
-        
-        if(rech==true)
+        result=new SearchInfo(filename,count,lineNumber,lines,wordSearched,containsJoker);   
+        if(ti.getRech()==true)
         {
             if(count>1)
                 return result;
@@ -278,9 +183,10 @@ public class Fetcher implements ActionListener
         try
         {
             tableData=t.fetchData();
-            fileData = new LinkedHashMap<String,String>();
+            ArrayList<FileInfo> fileDataList=new ArrayList<FileInfo>();
+            fileData = new Info<FileInfo>(fileDataList);
             File selected=b.getFile();
-            b.getFiles(selected,"",fileData);
+            b.getFiles(selected,"",fileDataList);
             Compare(tableData,fileData);
         }catch(IOException ioe)
         {

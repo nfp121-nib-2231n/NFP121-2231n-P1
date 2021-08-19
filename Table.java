@@ -25,6 +25,7 @@ public class Table implements ActionListener
     
     private int size;
     
+    private StringDoctor sd;
     public Table()
     {
         size=20;
@@ -58,6 +59,7 @@ public class Table implements ActionListener
         losColumn.setCellRenderer(tar);
         
         tab.getColumnModel().getColumn(0).setCellRenderer(r);
+        sd=new StringDoctor();
     }
     public JTable get()
     {
@@ -118,18 +120,26 @@ public class Table implements ActionListener
     {
         insertEmpty();
     }
-    public ArrayList<String[]> fetchData()
+    public Info<TableInfo> fetchData()
     {
-        ArrayList<String[]> list = new ArrayList<String[]>();
+        ArrayList<TableInfo> list = new ArrayList<TableInfo>();
         for(int i=0;i<model.getRowCount();i++)
         {
-            String[] current=new String[7];
+            String[] row=new String[7];
             for(int j=0;j<model.getColumnCount();j++)
             {
-                current[j]=model.getValueAt(i,j).toString();
+                row[j]=model.getValueAt(i,j).toString();
             }
-            list.add(current);
+            if(sd.CheckEmpty(row[1])==false|sd.CheckEmpty(row[2])==false)
+            {
+                list.add(new TableInfo(row[0],row[1],row[2],row[3],row[4],row[5],row[6]));
+            }else
+            {
+                 JOptionPane.showMessageDialog(null, "You cant have both Description & List of sequence empty",
+                "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            }
         }
-        return list;
+        return(new Info<TableInfo>(list));
     }
 }
