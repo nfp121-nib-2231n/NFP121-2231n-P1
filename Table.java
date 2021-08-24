@@ -130,15 +130,25 @@ public class Table implements ActionListener
             {
                 row[j]=model.getValueAt(i,j).toString();
             }
-            if(sd.CheckEmpty(row[1])==false|sd.CheckEmpty(row[2])==false)
-            {
-                list.add(new TableInfo(row[0],row[1],row[2],row[3],row[4],row[5],row[6]));
-            }else
+            if(sd.isEmpty(row[1])&sd.isEmpty(row[2]))
             {
                  JOptionPane.showMessageDialog(null, "You cant have both Description & List of sequence empty",
                 "Error", JOptionPane.ERROR_MESSAGE);
-                break;
+                return null;
             }
+            if(sd.isEmpty(row[5]))
+            {
+                JOptionPane.showMessageDialog(null, "You need to choose multiple",
+                "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+            if(sd.isEmpty(row[6]))
+            {
+            JOptionPane.showMessageDialog(null, "You need to choose file type",
+                "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+            list.add(new TableInfo(row[0],row[1],row[2],row[3],row[4],row[5],row[6]));
         }
         return(new Info<TableInfo>(list));
     }

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 import java.io.File;
 
-public class UI
+public class UI extends JFrame
 {
     private JFrame f;
     private BrowseButton b;
@@ -24,7 +24,7 @@ public class UI
     
     public UI()
     {
-        f=new JFrame();
+        f=this;
         titlePanel=new JPanel();
         titlePanelParent=new JPanel();
         FlowPanel=new JPanel();

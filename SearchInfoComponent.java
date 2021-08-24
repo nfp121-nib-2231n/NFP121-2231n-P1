@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 // This acts as an interface for every SearchInfo (Leaf)
 // and SearchInfoGroup (Composite) created
 public abstract class SearchInfoComponent implements MainIterator{
@@ -15,15 +17,15 @@ public abstract class SearchInfoComponent implements MainIterator{
     // This allows me to retrieve the index
     public int getIndex(){throw new UnsupportedOperationException();}
     // This allows me to retrieve the filename
-        public String getFilename(){throw new UnsupportedOperationException();}
-        // This allows me to retrieve the count 
-        public int getCount(){throw new UnsupportedOperationException();}
-        // This allows me to retrieve the line numbers
-        public String[] getLinenumber(){throw new UnsupportedOperationException();}
-        // This allows me to retrieve the lines in which the words are
-        public String[] getLines(){throw new UnsupportedOperationException();}
-        // This allows me to retrieve the word searched for
-        public String[] getWords(){throw new UnsupportedOperationException();}
-        // This allows me to retrieve the boolean containsJoker
-        public boolean getCJ(){throw new UnsupportedOperationException();}
+    public String getFilename(){throw new UnsupportedOperationException();}
+    // This allows me to retrieve the count 
+    public int getCount(){throw new UnsupportedOperationException();}
+    // This allows me to retrieve the line numbers
+    public ArrayList<String> getLinenumber(){throw new UnsupportedOperationException();}
+    // This allows me to retrieve the lines in which the words are
+    public ArrayList<String> getLines(){throw new UnsupportedOperationException();}
+    // This allows me to retrieve the word searched for
+    public ArrayList<ArrayList<String>> getWords(){throw new UnsupportedOperationException();}
+    // This allows me to retrieve the boolean containsJoker
+    public boolean getCJ(){throw new UnsupportedOperationException();}
 }

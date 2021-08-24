@@ -23,17 +23,17 @@ public class TableInfo
     }
     private String CheckLos(String l)
     {
-        if(l.equals("")||l==null)
+        if(se.isEmpty(l))
         {
             return description.toLowerCase();
         }
-        return l;
+        return l.replaceAll("\\s","");
     }
     private String CheckJoker(String j)
     {
             String ptn="";
             
-            if(j.equals("")||j==null)
+            if(se.isEmpty(j))
             {
                 
             }else
@@ -49,7 +49,7 @@ public class TableInfo
                         ptn+=se.EscapeString(losParts[x])+"[^"+se.EscapeString(losParts[losParts.length-1])+"]*";
                     }
                 }
-            }
+            }       
             return ptn;
     }
     private boolean CheckRech(String m)

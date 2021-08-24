@@ -13,12 +13,27 @@ public class StringDoctor
        
         return s;
     }
-    public boolean CheckEmpty(String s)
+    public String EscapeHtml(String s)
     {
-        if(s.equals(""))
+        String lt="<";
+        String gt=">";
+        //String str="";
+        if(s.contains(lt))
         {
-        return true;
+            s=s.replaceAll(lt,"&lt;");
         }
+        if(s.contains(gt))
+        {
+            s=s.replaceAll(gt,"&gt;");
+        }
+        return s;
+    }
+    public boolean isEmpty(String s)
+    {
+        if(s.trim().length()>0)
+        {
         return false;
+        }
+        return true;
     }
 }

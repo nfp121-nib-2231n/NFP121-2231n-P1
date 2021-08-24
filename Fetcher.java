@@ -23,6 +23,8 @@ public class Fetcher implements ActionListener
      
     private void Compare(Info<TableInfo> tData,Info<FileInfo> fData)
     {
+        if(tData!=null)
+        {
         int index=0;
         Iterator tIter=tData.createIterator();
         
@@ -48,23 +50,24 @@ public class Fetcher implements ActionListener
             all.add(group);
         }
         Result r = new Result(all);
+        }
     }
     private SearchInfo FindString(TableInfo ti,FileInfo fi)
     {
         int count = 0,countBuffer=0,countLine=0;
-        //String to store at what lines the words were found
-        String lineNumber = "";
+        //Arraylist to store at what lines the words were found
+        ArrayList<String> lineNumber=new ArrayList<String>();
         Reader reader = new StringReader(fi.getData());
         
         SearchInfo result;
         //Empty string to store each line in
         String line = "";
-        //String to store found lines in
-        String lines="";
+        //ArrayList to store found lines in
+        ArrayList<String> lines = new ArrayList<String>();
         //boolean that checks if the search contains joker
         boolean containsJoker=false;
-        //String to store the words found in
-        String wordSearched="";
+        //Arraylist to store the words found in
+        ArrayList<ArrayList<String>> wordSearched = new ArrayList<ArrayList<String>>();
         
         String filename=fi.getName();
         
@@ -85,27 +88,28 @@ public class Fetcher implements ActionListener
                     while((line = br.readLine()) != null)
                     {
                         countLine++;
-                        String[] words = line.split(" ");
-                        for (String word : words) 
+                        Pattern p = Pattern.compile(se.EscapeString(splitLos[i]));
+                        Matcher m = p.matcher(line);
+                        
+                        if(m.find())
                         {
-                            if (word.contains(splitLos[i])) 
+                            ArrayList<String> temp=new ArrayList<String>();
+                            m.reset();
+                            while(m.find())
                             {
-                                wordSearched+=splitLos[i]+"-_-";
-                                count++;
-                                countBuffer++;
-                                if(lines.contains(line))
+                                if(lineNumber.contains(countLine+""))
                                 {
-                                    
+                                
                                 }else
                                 {
-                                    lines+=line+" "+"-_-";
-                                }    
+                                    lines.add(line+" ");
+                                    lineNumber.add(countLine+"");
+                                }
+                                String word=line.substring(m.start(),m.end());
+                                temp.add(word);
+                                count++;
                             }
-                        }
-                        if(countBuffer > 0)
-                        {
-                            countBuffer = 0;
-                            lineNumber += countLine + ",";
+                            wordSearched.add(temp);
                         }
                     }
                 }
@@ -126,30 +130,32 @@ public class Fetcher implements ActionListener
                                 if(currentText.contains(firstPart))
                                 {
                                     Matcher m=p.matcher(currentText);
-                                    if(m.find()){
+                                    if(m.find())
+                                    {
+                                        ArrayList<String> temp=new ArrayList<String>();
                                         //this will reset the matcher to start again from 0
                                         m.reset();
                                         while(m.find())
                                         {
-                                            if(lines.contains(currentText))
+                                            if(lineNumber.contains(countLine+""))
                                             {
                                             }else
                                             {
-                                                lines+=currentText+" "+"-_-";
+                                                lines.add(se.EscapeHtml(" "+currentText+" "));
+                                                lineNumber.add(countLine+"");
                                             }
-                                            lineNumber+=countLine+",";
+                                            
                                             count++;
                                             String word=currentText.substring(m.start(),m.end());
-                                            word=se.EscapeString(word);
-                                            wordSearched+=word+"-";
+                                            word=se.EscapeHtml(se.EscapeString(word));
+                                            temp.add(word);
                                         }
-                                        wordSearched+="-_-";
+                                        wordSearched.add(temp);
                                         currentText="";  
                                     }else
                                     {
                                     
                                     }
-                                     
                                 }else
                                 {
                                     currentText="";

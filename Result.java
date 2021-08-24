@@ -18,6 +18,7 @@ public class Result
     private StringDoctor se;
     public Result(SearchInfoComponent data)
     {
+        se=new StringDoctor();
         frame=new JFrame();
         mainPanel = new JPanel();
         panel=new JPanel();
@@ -35,7 +36,7 @@ public class Result
         
         addPanels(panel,cons,data);
         frame.setVisible(true);
-        se=new StringDoctor();
+        
         
     }
     private void addPanels(JPanel p,GridBagConstraints c,SearchInfoComponent d)
@@ -68,23 +69,15 @@ public class Result
                     int count = leaf.getCount();
                     if(count>0)
                     {
-                        String[] linenumber=leaf.getLinenumber();
-                        String[] lines=leaf.getLines();
+                        ArrayList<String> linenumber=leaf.getLinenumber();
+                        ArrayList<String> lines=leaf.getLines();
+                        ArrayList<ArrayList<String>> wordSearched = leaf.getWords();
                         boolean containsJoker=leaf.getCJ();
                         
                         if(containsJoker==false)
                         {
-                            String[] wordSearched = leaf.getWords();
-                            for(String l:lines)
-                            {
-                                System.out.println("LINE "+l);
-                            }
-                            for(String s:wordSearched)
-                            {
-                                System.out.println("WORD "+s);
-                            }
-                            JPanel[] panels = new JPanel[lines.length];
-                            JLabel[] labels = new JLabel[lines.length];
+                            JPanel[] panels = new JPanel[lines.size()];
+                            JLabel[] labels = new JLabel[lines.size()];
                             
                             JPanel title =new JPanel();
                             title.setLayout(new FlowLayout());
@@ -104,17 +97,18 @@ public class Result
                                     length=s.length();
                                 }
                             }
-                            for(int x=0;x<linenumber.length;x++)
+                            for(int x=0;x<linenumber.size();x++)
                             {
-                                if(linenumber[x].length()<length)
+                                if(linenumber.get(x).length()<length)
                                 {
-                                    String lasts=linenumber[x];
-                                    linenumber[x]="";
+                                    String lasts=linenumber.get(x);
+                                    String ln="";
                                     for(int h=lasts.length();h<length;h++)
                                     {
-                                        linenumber[x]+="0";
+                                        ln+="0";
                                     }
-                                    linenumber[x]+=lasts;  
+                                    ln+=lasts;
+                                    linenumber.set(x,ln);
                                 }
                             }
                             for(int k=0;k<panels.length;k++)
@@ -131,16 +125,15 @@ public class Result
                                     panels[k].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
                                 }
                                 //Make the word found bold
-                                
-                                String[] split=lines[k].split(wordSearched[k]);
-                                String htmlStr="<html><span>"+linenumber[k]+"|";
+                                String[] split=lines.get(k).split(se.EscapeString(wordSearched.get(k).get(0)));
+                                String htmlStr="<html><span>"+linenumber.get(k)+"|";
                                     for(int y=0;y<split.length;y++)
                                     {
                                         if(y==split.length-1)
                                         {
                                             htmlStr+=split[y]+"</span></html>";
                                         }else{
-                                            htmlStr+=split[y]+"<b><i>"+wordSearched[k]+"</i></b>";
+                                            htmlStr+=split[y]+"<b><i>"+wordSearched.get(k).get(0).replaceAll("\\\\","")+"</i></b>";
                                         }
                                     }
                                 
@@ -152,10 +145,8 @@ public class Result
                         }
                         else
                         {
-                            String[] wordSearched=leaf.getWords();
-                            
-                            JPanel[] panels = new JPanel[lines.length];
-                            JLabel[] labels = new JLabel[lines.length];
+                            JPanel[] panels = new JPanel[lines.size()];
+                            JLabel[] labels = new JLabel[lines.size()];
                             
                             JPanel title =new JPanel();
                             title.setLayout(new FlowLayout());
@@ -165,7 +156,7 @@ public class Result
                             title.setAlignmentX(Component.LEFT_ALIGNMENT);
                             title.setBackground(darkgrey);
                             p1.add(title);
-                            
+                            //Change the style of the linenumber to be the same length
                             int length=0;
                         
                             for(String s:linenumber)
@@ -175,21 +166,20 @@ public class Result
                                     length=s.length();
                                 }
                             }
-                            for(int x=0;x<linenumber.length;x++)
+                            for(int x=0;x<linenumber.size();x++)
                             {
-                                if(linenumber[x].length()<length)
+                                if(linenumber.get(x).length()<length)
                                 {
-                                    String lasts=linenumber[x];
-                                    linenumber[x]="";
+                                    String lasts=linenumber.get(x);
+                                    String ln="";
                                     for(int h=lasts.length();h<length;h++)
                                     {
-                                        linenumber[x]+="0";
+                                        ln+="0";
                                     }
-                                    linenumber[x]+=lasts;  
+                                    ln+=lasts;
+                                    linenumber.set(x,ln);
                                 }
                             }
-                            //Change the style of the linenumber to be the same length
-                        
                             for(int k=0;k<panels.length;k++)
                             {
                                 panels[k]=new JPanel();
@@ -205,23 +195,23 @@ public class Result
                                 }
                                 
                                 //Make the word found bold
-                                String [] wordParts=wordSearched[k].split("-");
+                                ArrayList<String> wordParts=wordSearched.get(k);
                                 String htmlStr="";
                                 String newWord="";
-                                String rest=lines[k];
-                                for(int it=0;it<wordParts.length;it++)
+                                String rest=lines.get(k);
+                                for(int it=0;it<wordParts.size();it++)
                                 {
-                                    String[] split=rest.split(wordParts[it]);
                                     
-                                    newWord=wordParts[it].replaceAll("\\\\","");
+                                    String[] split=rest.split(wordParts.get(it));
+                                    
+                                    newWord=wordParts.get(it).replaceAll("\\\\","");
                                     
                                     for(int y=0;y<split.length;y++)
-                                    {
-                                        
+                                    {   
                                         if(y==split.length-1)
                                         {
                                             rest=split[split.length-1];
-                                            if(it==wordParts.length-1)
+                                            if(it==wordParts.size()-1)
                                             {
                                                 htmlStr+=split[y];
                                             }
@@ -230,29 +220,30 @@ public class Result
                                             htmlStr+=split[y]+"<b><i>"+newWord+"</i></b>";
                                         }
                                     }
+                                    
                                 }
-                                //remove the line break
-                                htmlStr=htmlStr.replaceAll("\n","");
                                 //adding missing line numbers and fixing their length
+                                int endIndex=htmlStr.lastIndexOf("\n");
+                                htmlStr=htmlStr.substring(0,endIndex);
                                 Reader reader=new StringReader(htmlStr);
                                 BufferedReader br=new BufferedReader(reader);
                                 String htmlStr2="<html>";
                                 String line="";
                                 try
                                 {
-                                    int num=Integer.valueOf(linenumber[k]);
+                                    int num=Integer.valueOf(linenumber.get(k));
                                     while((line = br.readLine()) != null)
                                     {
                                         //Parsing to String
                                         String strnum=num+"";
                                         //Same function as before
-                                        for(int x=0;x<linenumber[k].length();x++)
+                                        for(int x=0;x<linenumber.get(k).length();x++)
                                         {
-                                            if(strnum.length()<linenumber[k].length())
+                                            if(strnum.length()<linenumber.get(k).length())
                                             {
                                                 String lasts=strnum;
                                                 strnum="";
-                                                for(int h=lasts.length();h<linenumber[k].length();h++)
+                                                for(int h=lasts.length();h<linenumber.get(k).length();h++)
                                                 {
                                                     strnum+="0";
                                                 }
@@ -267,6 +258,7 @@ public class Result
                                 {
                                     e.printStackTrace();
                                 }
+                                
                                 htmlStr2+="</html>";
                                 labels[k]=new JLabel(htmlStr2);
                                 labels[k].setFont(f);
