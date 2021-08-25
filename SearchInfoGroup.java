@@ -4,9 +4,9 @@ import java.util.Iterator;
 public class SearchInfoGroup extends SearchInfoComponent{
     // Contains any SearchInfos or SearchInfoGroups that are added
     // to this ArrayList
-    ArrayList SearchInfoComponents = new ArrayList();
+    private ArrayList<SearchInfoComponent> SearchInfoComponents = new ArrayList<SearchInfoComponent>();
     
-    int index;
+    private int index;
     
     public SearchInfoGroup(int i)
     {

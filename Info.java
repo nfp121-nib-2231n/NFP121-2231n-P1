@@ -9,7 +9,7 @@ public class Info<E> implements MainIterator
         this.elements=elements;
     }
     
-    public Iterator<E> createIterator()
+    public Iterator createIterator()
     {
         return elements.iterator();
     }

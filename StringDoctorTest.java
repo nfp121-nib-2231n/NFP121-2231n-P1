@@ -49,5 +49,21 @@ public class StringDoctorTest
         assertEquals(true, stringDo1.isEmpty("           "));
         assertEquals(true, stringDo1.isEmpty("       \n"));
     }
+
+    @Test
+    public void TestEscapeHtml()
+    {
+        StringDoctor stringDo1 = new StringDoctor();
+        assertEquals("&lt;testString&gt;", stringDo1.EscapeHtml("<testString>"));
+    }
+
+    @Test
+    public void TestEscapeString()
+    {
+        StringDoctor stringDo1 = new StringDoctor();
+        assertEquals("/\\*\\?\\+testString", stringDo1.EscapeString("/*?+testString"));
+    }
 }
+
+
 

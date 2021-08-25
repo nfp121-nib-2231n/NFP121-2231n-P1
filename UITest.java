@@ -68,7 +68,7 @@ public class UITest
         f.dispose();
     }
     @Test
-    public void test_s() throws Exception{
+    public void test_main() throws Exception{
         try{
             Container panel = f.getContentPane();
             Component[] components = panel.getComponents();
